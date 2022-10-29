@@ -43,5 +43,5 @@ Finally, we test the WK-means on the SP500 index.
 1. `market_regime_detection.ipynb`: A Jupyter Notebook to test HMM vs. WK-means vs. Moments k-means on generated data.
 2. `WK-means_sp500.ipynb`: A Jupyter Notebook to test the WK-means on the SP500 data.
 3. `requirements.txt`: Requirements file
-3. `src`: Source code folder
-3. `data`: Data folder
+4. `src`: Source code folder
+5. `data`: Data folder
