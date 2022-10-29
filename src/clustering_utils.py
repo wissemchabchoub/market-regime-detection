@@ -237,7 +237,7 @@ def create_labels(est, features):
     return labels
 
 
-def mean_volatility_plot(returns, labels, centroids, centroids_mean, centroids_vol):
+def mean_volatility_plot(returns, labels, centroids, centroids_mean, centroids_vol, fig_mode='svg'):
     """Generates a plot of the returns in the mean volatility space
     """
     n_clusters = len(centroids)
@@ -261,67 +261,7 @@ def mean_volatility_plot(returns, labels, centroids, centroids_mean, centroids_v
     fig = px.scatter(x=mean, y=volatility, color=c, symbol=symbol, size=size)
     fig.update_layout(xaxis_title='mean',
                       yaxis_title='volatility',)
-    fig.show()
-
-
-def plot_spread_evolution_up_to_regime_date(spread_data, labels, N, forward, start_date=None):
-    """Plots spread evolution for each regime
-        returns the cumsum(returns[t,t+N]]) or cumsum(returns[t-N,t]])
-        * t ∈ Regime
-        * t+N ot t-N are necessary in the Regime
-
-    Parameters
-    ----------
-    spread_data : pd.Series
-        time series of the spread
-    labels : pd.Series
-        labels (Regimes)
-    N : int
-        return period
-    forward : boolean
-        forward or backward returns
-    """
-    n_clusters = len(set(labels))
-    if forward:
-        spread_data = spread_data.diff(N).shift(-N)
-    else:
-        spread_data = spread_data.diff(N)
-
-    spread_data = spread_data.loc[labels.index]
-    
-    if start_date is not None:
-        spread_data = spread_data.loc[start_date:]
-        
-    #return (pd.concat([(spread_data[labels == i]).rename(f'regime {i}') for i in range(n_clusters)],
-    #                 axis=1))
-
-    fig = (pd.concat([(spread_data[labels == i]).rename(f'regime {i}') for i in range(n_clusters)],
-                     axis=1).fillna(0).cumsum()/N).plot()
-
-    fig.update_layout(xaxis_title='date',
-                      yaxis_title='',
-                      title='USHY OAS evolution up to regime date',)
-    fig.show()
-
-
-def plot_spread_evolion_within_each_regime(df, N,):
-    """Plots spread evolution for each regime
-        returns the cumsum(returns[t-N,t]])
-        * t ∈ Regime
-        * t-N ∈ Regime
-
-    Parameters
-    ----------
-    df : pd.DataFrame
-        DataFrame with each column having the values of a spectif regime (the rest are NaNs)
-    N : int
-        return period
-    """
-    fig = (df.diff(N).fillna(0)/N).cumsum().plot()
-    fig.update_layout(xaxis_title='date',
-                      yaxis_title='',
-                      title='USHY OAS evolution within each regime',)
-    fig.show()
+    fig.show(fig_mode)
 
 
 def compute_WCSS_wk_means(estimator, atoms, labels):
